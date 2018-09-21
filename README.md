@@ -7,4 +7,4 @@ A bot for the SwitchHaxing discord
 
 ## Credits
 * [LyricLy](https://github.com/LyricLy/) for the warn module.
-* [Kurisu](https://github.com/nh-server/Kurisu) for error parsing in [main.py]
+* [Kurisu](https://github.com/nh-server/Kurisu) for error parsing in [main.py](https://github.com/GriffinG1/Midnight/blob/master/main.py#L36-L57)
