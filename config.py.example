@@ -1,0 +1,60 @@
+# Config for bot
+
+# Token bot runs under
+token = ''
+
+# Prefix to execute bot commands
+prefix = [
+    '.',
+    '!',
+]
+
+# Description of the bot
+description = 'The bot for the Kurain Village Discord!'
+
+# ID for log channel - member joins, leaves, and moderator actions will be sent here
+log_channel = 0
+
+# ID for public and private ban logs, if they exist. Note, you can have one and not the other
+public_logs = 0
+private_logs = 0
+
+# ID for deleted message logs
+message_log_channel = 0
+
+# ID for error logging
+err_logs_channel = 0
+
+# Ignored channels for message logging
+ignored_chans = [
+    
+]
+
+# Name of your NSFW role. If none exists, leave this blank.
+nsfw_role = ""
+
+# Name of your News role. If none exists, leave this blank.
+news_role = ""
+
+# Name of the restricted role. If none exists, leave this blank.
+restrict_role = ""
+
+# Name of your staff role(s)
+staff_roles = [
+    ""
+]
+
+# ID's of blacklisted users.
+blocked_users = [
+    0
+]
+
+# Approval system. If you aren't using one on your server, leave approval_bool equal to False. If you are, please fill in all values below.
+
+approval_bool = False
+
+# The channel for approvals to occur in.
+approval_channel = 0
+
+# The default member role for the server.
+default_role = 0
