@@ -39,15 +39,16 @@ class Moderation:
         elif self.bot.staff_role in found_member.roles and ctx.author != ctx.guild.owner:
             return await ctx.send("That user is protected!")
         else:
-            embed = discord.Embed(title="{} kicked".format(found_member), colour=discord.Color.orange())
+            embed = discord.Embed(title="{} kicked".format(found_member))
             embed.description = "{}#{} was kicked by {} for:\n\n{}".format(found_member.name, found_member.discriminator, ctx.message.author, reason)
+            embed.set_footer(text="Member ID = {}".format(found_member.id))
             await self.bot.log_channel.send(embed=embed)
             try:
                 await found_member.send("You were kicked from SwitchHaxing for:\n\n`{}`".format(reason))
             except discord.Forbidden:
                 pass # bot blocked or not accepting DMs
             await found_member.kick(reason=reason)
-            await ctx.send("Successfully kicked user {0.name}#{0.discriminator}!".format(found_member))
+            await ctx.send("Successfully kicked user {}#{}!".format(found_member.name, found_member.discriminator))
      
     @commands.command(pass_context=True)
     async def ban(self, ctx, member, *, reason="No reason was given."):
@@ -74,7 +75,51 @@ class Moderation:
             except:
                 pass # bot blocked or not accepting DMs
             await found_member.ban(reason=reason)
-            await ctx.send("Successfully banned user {0.name}#{0.discriminator}!".format(found_member))
+            await ctx.send("Successfully banned user {}#{}!".format(found_member.name, found_member.discriminator))
+            
+    @commands.has_permissions(ban_members=True)    
+    @commands.command()
+    async def mute(self, ctx, member, *, reason=""):
+        """Mute a member."""
+        found_member = self.find_user(member, ctx)
+        if found_member == ctx.message.author:
+            return await ctx.send("Why are you trying to mute yourself?")
+        elif not found_member:
+            await ctx.send("That user could not be found.")
+        elif self.bot.staff_role in found_member.roles and ctx.author != ctx.guild.owner:
+            return await ctx.send("You can't mute a fellow staff member!")
+        elif self.bot.mute_role in found_member.roles:
+            return await ctx.send("That user is already muted!")
+        else:
+            await found_member.add_roles(self.bot.mute_role)
+            await ctx.send("Successfully muted user {}#{}!".format(found_member.name, found_member.discriminator))
+            embed = discord.Embed(title="{} muted".format(found_member)
+            embed.description = "{}#{} muted user {}#{} for `{}`".format(ctx.message.author.name, ctx.message.author.discriminator, found_member.name, found_member.discriminator, reason if reason != "" else "No reason was given")
+            embed.set_footer(text="Member ID = {}".format(found_member.id))
+            await self.bot.log_channel.send(embed=embed)
+            try:
+                await found_member.send("You have been muted on SwitchHaxing.\n{}\nIf you feel this mute was unwarranted, dm a staff member.".format(reason))
+            except discord.errors.Forbidden:
+                pass # Bot blocked
+            
+    @commands.has_permissions(ban_members=True)    
+    @commands.command()
+    async def unmute(self, ctx, *, member):
+        """Unmute a member."""
+        found_member = self.find_user(member, ctx)
+        if found_member == ctx.message.author:
+            return await ctx.send("How did you manage to mute yourself...")
+        elif not found_member:
+            return await ctx.send("That user could not be found.")
+        elif not self.bot.mute_role in found_member.roles:
+            return await ctx.send("That user isn't muted!")
+        else:
+            await found_member.remove_roles(self.bot.mute_role)
+            embed = discord.Embed(title = "{} unmuted".format(found_member)
+            embed.description = "{}#{} unmuted user {}#{}".format(ctx.message.author.name, ctx.message.author.discriminator, found_member.name, found_member.discriminator)
+            embed.set_footer(text="Member ID = {}".format(found_member.id))
+            await self.bot.log_channel.send(embed=embed)
+            await ctx.send("Successfully unmuted user {}#{}!".format(found_member.name, found_member.discriminator))
             
     @commands.has_permissions(kick_members=True)
     @commands.command(aliases=['p'])
@@ -92,12 +137,11 @@ class Moderation:
                 message += " for `{}`".format(reason)
             await self.bot.log_channel.send(message)
         else:
-            await ctx.send("Why would you wanna purge no messages?", delete_after=10)   
+            await ctx.send("Why would you wanna purge no messages?", delete_after=10)
         
     @commands.command(aliases=['ge'], hidden=True)
     async def guaranteed_error(self, ctx):
         await ctx.s()
-            
             
 def setup(bot):
     bot.add_cog(Moderation(bot))

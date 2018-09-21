@@ -94,6 +94,7 @@ async def on_ready():
                 
             bot.direct_role = discord.utils.get(guild.roles, id=421417111169138712)
             bot.staff_role = discord.utils.get(guild.roles, id=492484938562666496)
+            bot.mute_role = discord.utils.get(guild.roles, id=492493109481963520)
                 
             bot.message_purge = False
                 
