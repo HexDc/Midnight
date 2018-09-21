@@ -71,7 +71,6 @@ async def on_error(event_method, *args, **kwargs):
 
 @bot.event
 async def on_ready():
-    # this bot should only ever be in one server anyway
     for guild in bot.guilds:
         try:
             bot.guild = guild
@@ -87,16 +86,17 @@ async def on_ready():
                 
             bot.creator = discord.utils.get(guild.members, id=177939404243992578)
             
-            bot.log_channel = discord.utils.get(guild.channels, id=492484620240158720)
-            bot.ignored_channels = {bot.message_log_channel, bot.log_channel, bot.log_channel}
+            bot.log_channel = discord.utils.get(guild.channels, id=486994270620876830)
+            bot.ignored_channels = {bot.log_channel}
             for id in config.ignored_chans:
                 bot.ignored_channels.add(discord.utils.get(guild.channels, id=id))
                 
             bot.direct_role = discord.utils.get(guild.roles, id=421417111169138712)
-            bot.staff_role = discord.utils.get(guild.roles, id=492484938562666496)
-            bot.mute_role = discord.utils.get(guild.roles, id=492493109481963520)
+            bot.staff_role = discord.utils.get(guild.roles, id=349851767078649859)
+            bot.mute_role = discord.utils.get(guild.roles, id=385493119233163265)
                 
             bot.message_purge = False
+                
                 
             print("Initialized on {}.".format(guild.name))
         except Exception as e:

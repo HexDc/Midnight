@@ -57,10 +57,10 @@ class Utility:
             await self.bot.change_presence(activity=show)
             return await ctx.send("Changed video status to `{}`!".format(presence))
             
-        @commands.command()
+    @commands.command()
     async def about(self, ctx):
         """Information about the bot"""
-        await ctx.send("This is a bot coded in python for use in the SwitchHaxing server, made primarily by {}#{}. You can view the source code here: <https://github.com/GriffinG1/Godot>.".format(self.bot.creator.name, self.bot.creator.discriminator))
+        await ctx.send("This is a bot coded in python for use in the SwitchHaxing server, made primarily by {}#{}. You can view the source code here: <https://github.com/GriffinG1/Midnight>.".format(self.bot.creator.name, self.bot.creator.discriminator))
         
     @commands.command(aliases=['mc'])
     async def membercount(self, ctx):
@@ -70,14 +70,22 @@ class Utility:
             if not user.bot:
                 members += 1
         await ctx.send("There are {} members on this server!".format(members))
+        
+    async def role_change(ctx, role, user):
+        print(role)
+        print(user)
+        if not role in user.roles:
+            await user.add_roles(role)
+        else:
+            await user.remove_roles(role)
             
     @commands.command(aliases=['tr'])
-    async def togglerole(self, ctx, role="")
+    async def togglerole(self, ctx, role=""):
         """Used to toggle roles. Available: Direct"""
         role = role.lower()
-        found_member = ctx.message.author()
+        found_member = ctx.message.author
         author_roles = found_member.roles[1:]
-        if role == "direct"
+        if role == "direct":
             await self.role_change(self.bot.direct_role, found_member)
             await ctx.send("Toggled the Direct role!")
             await self.bot.log_channel.send("{}#{} toggled the Direct role.".format(found_member.name, found_member.discriminator))

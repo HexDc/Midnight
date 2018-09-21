@@ -88,7 +88,7 @@ class Warning:
             await ctx.send(reply_msg)
             embed = discord.Embed(description="{0.name}#{0.discriminator} warned user <@{1.id}> | {1.name}#{1.discriminator}".format(ctx.author, found_member))
             embed.add_field(name="Reason given", value="• " + reason)
-            await self.bot.cmd_logs_channel.send(embed=embed)
+            await self.bot.log_channel.send(embed=embed)
             with open("saves/warns.json", "w+") as f:
                 json.dump(self.warns, f)
                 
@@ -133,7 +133,7 @@ class Warning:
                         json.dump(self.warns, f)
                     await ctx.send("Cleared the warns of user {}#{}.".format(found_member.name, found_member.discriminator))
                     embed = discord.Embed(description="{0.name}#{0.discriminator} cleared warns of user <@{1.id}> | {1.name}#{1.discriminator}".format(ctx.author, found_member))
-                    await self.bot.cmd_logs_channel.send(embed=embed)
+                    await self.bot.log_channel.send(embed=embed)
                     try:
                         await found_member.send("All your warns have been cleared.")
                     except discord.errors.Forbidden:
@@ -160,7 +160,7 @@ class Warning:
                         await ctx.send("Removed `{}` warn of user {}#{}.".format(reason, found_member.name, found_member.discriminator))
                         embed = discord.Embed(description="{0.name}#{0.discriminator} took a warn off of user <@{1.id}> | {1.name}#{1.discriminator}".format(ctx.author, found_member))
                         embed.add_field(name="Removed Warn", value="• " + reason)
-                        await self.bot.cmd_logs_channel.send(embed=embed)
+                        await self.bot.log_channel.send(embed=embed)
                     except ValueError:
                         await ctx.send("{}#{} was never warned for the reason `{}`!".format(found_member.name, found_member.discriminator, reason))
                 else:

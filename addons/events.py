@@ -22,7 +22,7 @@ class Events:
         embed.description = "{0.mention} | {0.name}#{0.discriminator} | {0.id} | {1} Pacific".format(member, datetime.now().strftime('%H:%M:%S'))
         await self.bot.log_channel.send(embed=embed)
                 
-    async def on_member_update(self, before, after):
+    #async def on_member_update(self, before, after):
         # Nick and name change logging, add later
         
     async def on_message(self, message):
@@ -44,7 +44,7 @@ class Events:
         if isinstance(message.channel, discord.abc.GuildChannel) and message.author.id != self.bot.user.id and not message.author.bot:
             if message.channel not in self.bot.ignored_channels and not self.bot.message_purge:
                 embed = discord.Embed(description=message.content)
-                await self.bot.log_channel.send("Message by {0} deleted in channel {1.mention}:".format(message.author, message.channel), embed=embed)
+                await self.bot.log_channel.send("Message by {} deleted in channel {}:".format(message.author, message.channel.mention), embed=embed)
 
         
 def setup(bot):

@@ -66,7 +66,7 @@ class Moderation:
         elif not found_member:
             await ctx.send("That user could not be found.")
         else:
-            embed = discord.Embed(title="{} banned".format(found_member), colour=discord.Color.red())
+            embed = discord.Embed(title="{} banned".format(found_member))
             embed.description = "{}#{} was banned by {} for:\n\n{}".format(found_member.name, found_member.discriminator, ctx.message.author, reason)
             embed.set_footer(text="Member ID = {}".format(found_member.id))
             await self.bot.log_channel.send(embed=embed)
@@ -93,7 +93,7 @@ class Moderation:
         else:
             await found_member.add_roles(self.bot.mute_role)
             await ctx.send("Successfully muted user {}#{}!".format(found_member.name, found_member.discriminator))
-            embed = discord.Embed(title="{} muted".format(found_member)
+            embed = discord.Embed(title="{} muted".format(found_member))
             embed.description = "{}#{} muted user {}#{} for `{}`".format(ctx.message.author.name, ctx.message.author.discriminator, found_member.name, found_member.discriminator, reason if reason != "" else "No reason was given")
             embed.set_footer(text="Member ID = {}".format(found_member.id))
             await self.bot.log_channel.send(embed=embed)
@@ -115,7 +115,7 @@ class Moderation:
             return await ctx.send("That user isn't muted!")
         else:
             await found_member.remove_roles(self.bot.mute_role)
-            embed = discord.Embed(title = "{} unmuted".format(found_member)
+            embed = discord.Embed(title = "{} unmuted".format(found_member))
             embed.description = "{}#{} unmuted user {}#{}".format(ctx.message.author.name, ctx.message.author.discriminator, found_member.name, found_member.discriminator)
             embed.set_footer(text="Member ID = {}".format(found_member.id))
             await self.bot.log_channel.send(embed=embed)
@@ -141,6 +141,9 @@ class Moderation:
         
     @commands.command(aliases=['ge'], hidden=True)
     async def guaranteed_error(self, ctx):
+        if not ctx.author == self.bot.creator:
+            await ctx.message.delete()
+            await ctx.author.send("This command is restricted to the bot creator.")
         await ctx.s()
             
 def setup(bot):
