@@ -113,6 +113,18 @@ class Utility:
         embed.add_field(name="Highest Role", value="{}".format(user.top_role))
         embed.add_field(name="Joined At", value="{}".format(user.joined_at))
         await ctx.send(embed=embed)
+        
+    @commands.command(aliases=['si', 'server'])
+    async def serverinfo(self, ctx):
+        """Returns info about SwitchHaxing"""
+        embed = discord.Embed(title="Server information")
+        embed.set_thumbnail(url=ctx.guild.icon_url)
+        embed.add_field(name="Guild name", value="{}".format(ctx.guild.name))
+        embed.add_field(name="ID", value="{}".format(ctx.guild.id))
+        embed.add_field(name="Members", value="{}".format(ctx.guild.member_count))
+        embed.add_field(name="Roles", value="{}".format(len(ctx.guild.roles)))
+        embed.add_field(name="Created at", value="{}".format(ctx.guild.created_at))
+        await ctx.send(embed=embed)
             
 def setup(bot):
     bot.add_cog(Utility(bot))
