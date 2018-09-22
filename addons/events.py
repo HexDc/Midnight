@@ -14,16 +14,37 @@ class Events:
                 
     async def on_member_join(self, member):
         embed = discord.Embed(title="New member!", colour=discord.Color.green())
-        embed.description = "{0.mention} | {0.name}#{0.discriminator} | {0.id} | {1} Pacific".format(member, datetime.now().strftime('%H:%M:%S'))
+        embed.description = "{0.mention} | {0.name}#{0.discriminator} | {0.id}".format(member)
+        embed.set_footer(text="Joined at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
         await self.bot.log_channel.send(embed=embed)
         
     async def on_member_remove(self, member):
         embed = discord.Embed(title="Member left.", colour=discord.Color.blue())
-        embed.description = "{0.mention} | {0.name}#{0.discriminator} | {0.id} | {1} Pacific".format(member, datetime.now().strftime('%H:%M:%S'))
+        embed.description = "{0.mention} | {0.name}#{0.discriminator} | {0.id}".format(member)
+        embed.set_footer(text="Left at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
         await self.bot.log_channel.send(embed=embed)
                 
-    #async def on_member_update(self, before, after):
+                
+    def embed_member_change(ctx, before, after, item):
+        embed = discord.Embed(title="{} change for {}".format(item, before))
+        if item == "Username":
+            before_item = before.name
+            after_item = after.name
+        elif item == "Nickname":
+            before_item = before.nick
+            after_item = after.nick
+        embed.description = "**Before**: {}\n**After**: {}\n**ID**: {}".format(before_item, after_item, before.id)
+        embed.set_footer(text="Changed at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
+        return embed
+                
+    async def on_member_update(self, before, after):
         # Nick and name change logging, add later
+        if before.name != after.name:
+            embed = self.embed_member_change(before, after, "Username")
+            await self.bot.log_channel.send(embed=embed)
+        elif before.nick != after.nick:
+            embed = self.embed_member_change(before, after, "Nickname")
+            await self.bot.log_channel.send(embed=embed)
         
     async def on_message(self, message):
         # auto ban on 15+ pings

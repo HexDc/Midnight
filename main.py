@@ -155,7 +155,7 @@ async def load(ctx, *, module):
         await ctx.send(':white_check_mark: Extension loaded.')
         
 @bot.command(hidden=True)
-async def botedit(ctx, name=""):
+async def botedit(ctx, *, name=""):
     """Edits the bot profile. Takes name only, at the moment. Bot owner only"""
     await ctx.message.delete()
     if ctx.author != bot.creator:
