@@ -43,6 +43,18 @@ class Events:
         elif before.nick != after.nick:
             embed = self.embed_member_change(before, after, "Nickname")
             await self.bot.log_channel.send(embed=embed)
+        elif before.roles != after.roles:
+            embed = discord.Embed()
+            if len(before.roles) < len(after.roles):
+                role = list(set(after.roles)-set(before.roles))
+                embed.title = "Role added to {}".format(before)
+                embed.set_footer(text="Role added at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
+            else:
+                role = list(set(before.roles)-set(after.roles))
+                embed.title = "Role removed from {}".format(before)
+                embed.set_footer(text="Role removed at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
+            embed.description = "{}".format(role[0])
+            await self.bot.log_channel.send(embed=embed)
         
     async def on_message(self, message):
         # auto ban on 15+ pings
