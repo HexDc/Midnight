@@ -92,5 +92,27 @@ class Utility:
         else:
             return await ctx.send("You forgot to give an input, or gave an unrecognized input. Please try again. Available roles can be seed with `.help togglerole`")
             
+    @commands.command(aliases=['ui', 'user'])
+    async def userinfo(self, ctx, member=""):
+        """Gets the userinfo for a given server member. If given no member, it will pull your own info."""
+        if member:
+            user = self.find_user(member, ctx)
+            if not user:
+                return await ctx.send("Could not find that user!")
+        elif not member:
+            user = ctx.author
+        embed = discord.Embed(title="User info for {}".format(user))
+        embed.set_thumbnail(url=user.avatar_url)
+        embed.add_field(name="Username", value="{}".format(user.name))
+        embed.add_field(name="Status", value="{}".format(str(user.status).capitalize()))
+        if user.nick:
+            embed.add_field(name="Nickname", value="{}".format(user.nick))
+        if user.bot:
+            embed.add_field(name="Bot", value="{}".format(user.bot))
+        embed.add_field(name="ID", value="{}".format(user.id))
+        embed.add_field(name="Highest Role", value="{}".format(user.top_role))
+        embed.add_field(name="Joined At", value="{}".format(user.joined_at))
+        await ctx.send(embed=embed)
+            
 def setup(bot):
     bot.add_cog(Utility(bot))
