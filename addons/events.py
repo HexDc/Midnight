@@ -24,7 +24,6 @@ class Events:
         embed.set_footer(text="Left at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
         await self.bot.log_channel.send(embed=embed)
                 
-                
     def embed_member_change(ctx, before, after, item):
         embed = discord.Embed(title="{} change for {}".format(item, before))
         if item == "Username":
@@ -38,7 +37,6 @@ class Events:
         return embed
                 
     async def on_member_update(self, before, after):
-        # Nick and name change logging, add later
         if before.name != after.name:
             embed = self.embed_member_change(before, after, "Username")
             await self.bot.log_channel.send(embed=embed)
@@ -65,7 +63,23 @@ class Events:
         if isinstance(message.channel, discord.abc.GuildChannel) and message.author.id != self.bot.user.id and not message.author.bot:
             if message.channel not in self.bot.ignored_channels and not self.bot.message_purge:
                 embed = discord.Embed(description=message.content)
+                embed.set_footer(text="Deleted at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
                 await self.bot.log_channel.send("Message by {} deleted in channel {}:".format(message.author, message.channel.mention), embed=embed)
+                
+    async def on_message_edit(self, before, after):
+        if before.pinned != after.pinned:
+            if after.pinned is True:
+                pin_state = "Pinned"
+            else:
+                pin_state = "Unpinned"
+            embed = discord.Embed(description=after.content)
+            embed.set_footer(text="{} at {} Mountain Time".format(pin_state, datetime.now().strftime('%H:%M:%S')))
+            await self.bot.log_channel.send("Message by {} {} in {}".format(after.author, pin_state.lower(), after.channel.mention), embed=embed)
+        elif before.content != after.content:
+            embed = discord.Embed()
+            embed.description = "**Before**: {}\n**After**: {}".format(before.content, after.content)
+            embed.set_footer(text="Edited at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
+            await self.bot.log_channel.send("Message by {} edited in {}".format(after.author, after.channel.mention), embed=embed)
 
         
 def setup(bot):
