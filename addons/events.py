@@ -74,6 +74,8 @@ class Events:
     async def on_message_delete(self, message):
         if isinstance(message.channel, discord.abc.GuildChannel) and message.author.id != self.bot.user.id and not message.author.bot:
             if message.channel not in self.bot.ignored_channels and not self.bot.message_purge:
+                if not message.content: # Message is standalone image. Temporary until deleted image logging functions
+                    return
                 embed = discord.Embed(description=message.content)
                 embed.set_footer(text="Deleted at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
                 await self.bot.log_channel.send("Message by {} deleted in channel {}:".format(message.author, message.channel.mention), embed=embed)
