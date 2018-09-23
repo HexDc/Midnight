@@ -93,6 +93,7 @@ async def on_ready():
             for id in config.ignored_chans:
                 bot.ignored_channels.add(discord.utils.get(guild.channels, id=id))
                 
+            bot.spoiler_role = discord.utils.get(guild.roles, id=409749833176580097)
             bot.direct_role = discord.utils.get(guild.roles, id=421417111169138712)
             bot.staff_role = discord.utils.get(guild.roles, id=349851767078649859)
             bot.mute_role = discord.utils.get(guild.roles, id=385493119233163265)

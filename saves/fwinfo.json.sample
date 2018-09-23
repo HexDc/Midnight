@@ -1,3 +1,7 @@
 {
-    
+    "1.0.0": "This firmware is one of the easiest firmwares to get CFW on.",
+    "3.0.0": "Homebrew and CFW are available without RCM. Congrats!",
+    "5.0.2": "Homebrew and CFW is available, but requires RCM.",
+    "5.1.0": "Homebrew and CFW is available, but requires RCM. Can be downgraded to 5.0.2 under certain circumstances. Updating will lead to loss of CFW and Homebrew for now.",
+    "6.0.0": "Breaks almost Homebrew and CFW. Don't update!"
 }

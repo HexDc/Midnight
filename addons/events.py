@@ -1,10 +1,10 @@
 import discord
 from discord.ext import commands
 import asyncio
-import git
+#import git
 from datetime import datetime
 
-git = git.cmd.Git(".")
+# git = git.cmd.Git(".")
 
 class Events:
 
@@ -65,11 +65,11 @@ class Events:
             await message.channel.send("{} was banned for attempting to spam user mentions.".format(message.author))
             await self.bot.log_channel.send("{} was banned for attempting to spam user mentions.".format(message.author))
         
-        if isinstance(message.channel, discord.abc.GuildChannel) and 'git' in message.channel.name and message.author.name == 'GitHub':
-            print('Pulling changes')
-            git.pull()
-            print('Changes pulled!')
-            await self.bot.log_channel.send("Pulled latest changes!")
+        # if isinstance(message.channel, discord.abc.GuildChannel) and 'git' in message.channel.name and message.author.name == 'GitHub':
+            # print('Pulling changes')
+            # git.pull()
+            # print('Changes pulled!')
+            # await self.bot.log_channel.send("Pulled latest changes!")
             
     async def on_message_delete(self, message):
         if isinstance(message.channel, discord.abc.GuildChannel) and message.author.id != self.bot.user.id and not message.author.bot and not message.content.startswith(tuple(self.bot.command_list), 1):

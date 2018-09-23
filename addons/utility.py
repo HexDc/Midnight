@@ -89,7 +89,7 @@ class Utility:
             
     @commands.command(aliases=['tr'])
     async def togglerole(self, ctx, role=""):
-        """Used to toggle roles. Available: Direct"""
+        """Used to toggle roles. Available: Direct, Spoiler"""
         role = role.lower()
         found_member = ctx.message.author
         author_roles = found_member.roles[1:]
@@ -97,6 +97,10 @@ class Utility:
             await self.role_change(self.bot.direct_role, found_member)
             await ctx.send("Toggled the Direct role!")
             await self.bot.log_channel.send("{}#{} toggled the Direct role.".format(found_member.name, found_member.discriminator))
+        elif role == "spoiler" or role == "spoilers":
+            await self.role_change(self.bot.spoiler_role, found_member)
+            await ctx.send("Toggled the Spoiler role!")
+            await self.bot.log_channel.send("{}#{} toggled the Spoiler role.".format(found_member.name, found_member.discriminator))
         else:
             return await ctx.send("You forgot to give an input, or gave an unrecognized input. Please try again. Available roles can be seed with `.help togglerole`")
             
@@ -162,8 +166,13 @@ class Utility:
         with open('saves/fwinfo.json', 'r') as f:
             versionlist = json.load(f)
         embed = discord.Embed(title="Available firmwares", description="")
-        for version, data in versionlist.items():
-            embed.description += "{}\n".format(version)
+        version = {}
+        for i in versionlist.keys():
+            version[i.replace(".", "")] = i
+        a = [int(i) for i in version.keys()]
+        a.sort()
+        for value in a:
+            embed.description += "{}\n".format(version[str(value)])
         await ctx.send(embed=embed)
             
     
