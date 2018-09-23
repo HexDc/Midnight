@@ -72,8 +72,6 @@ class Utility:
         await ctx.send("There are {} members on this server!".format(members))
         
     async def role_change(ctx, role, user):
-        print(role)
-        print(user)
         if not role in user.roles:
             await user.add_roles(role)
         else:

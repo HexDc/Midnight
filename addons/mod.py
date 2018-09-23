@@ -123,8 +123,12 @@ class Moderation:
             
     @commands.has_permissions(kick_members=True)
     @commands.command(aliases=['p'])
-    async def purge(self, ctx, amount=0, *, reason=""):
+    async def purge(self, ctx, amount, *, reason=""):
         """Purge x amount of messages"""
+        if not isinstance(amount, int):
+            return await ctx.send("Error, `{}` is not an integer!".format(amount), delete_after=10)
+        else:
+            amount = 0
         await ctx.message.delete()
         asyncio.sleep(3)
         if amount > 0:

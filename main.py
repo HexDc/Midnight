@@ -25,6 +25,15 @@ description = config.description
 bot = commands.Bot(command_prefix=prefix, description=description)
 
 bot.dir_path = os.path.dirname(os.path.realpath(__file__))
+bot.command_list = []
+
+def get_command_list():
+    bot.command_list = []
+    for command in bot.commands:
+        bot.command_list.append(command.name)
+        bot.command_list.extend(command.aliases)
+        
+bot.get_command_list = get_command_list
 
 @bot.check # taken and modified from https://discordpy.readthedocs.io/en/rewrite/ext/commands/commands.html#global-checks
 async def globally_block_dms(ctx):
@@ -96,6 +105,8 @@ async def on_ready():
             bot.mute_role = discord.utils.get(guild.roles, id=385493119233163265)
                 
             bot.message_purge = False
+            
+            get_command_list()
                 
                 
             print("Initialized on {}.".format(guild.name))
@@ -138,6 +149,7 @@ async def reload(ctx):
             except Exception as e:
                 errors += 'Failed to load addon: `{}.py` due to `{}: {}`\n'.format(addon, type(e).__name__, e)
     if not errors:
+        bot.get_command_list()
         await ctx.send(':white_check_mark: Extensions reloaded.')
     else:
         await ctx.send(errors)
@@ -152,6 +164,7 @@ async def load(ctx, *, module):
     except Exception as e:
         await ctx.send(':anger: Failed!\n```\n{}: {}\n```'.format(type(e).__name__, e))
     else:
+        bot.get_command_list()
         await ctx.send(':white_check_mark: Extension loaded.')
         
 @bot.command(hidden=True)

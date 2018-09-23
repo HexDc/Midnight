@@ -72,7 +72,7 @@ class Events:
             await self.bot.log_channel.send("Pulled latest changes!")
             
     async def on_message_delete(self, message):
-        if isinstance(message.channel, discord.abc.GuildChannel) and message.author.id != self.bot.user.id and not message.author.bot:
+        if isinstance(message.channel, discord.abc.GuildChannel) and message.author.id != self.bot.user.id and not message.author.bot and not message.content.startswith(tuple(self.bot.command_list), 1):
             if message.channel not in self.bot.ignored_channels and not self.bot.message_purge:
                 if not message.content: # Message is standalone image. Temporary until deleted image logging functions
                     return
