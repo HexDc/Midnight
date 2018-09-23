@@ -9,8 +9,11 @@ class Warning:
     """Bot commands for moderation."""
     def __init__(self, bot):
         self.bot = bot
-        with open('saves/warns.json', 'r+') as f:
-            self.warns = json.load(f)
+        try:
+            with open('saves/warns.json', 'r+') as f:
+                self.warns = json.load(f)
+        except:
+            self.bot.unload_extension('addons.warn')
         print('Addon "{}" loaded'.format(self.__class__.__name__))
         
     def find_user(self, user, ctx):

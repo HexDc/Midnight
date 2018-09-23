@@ -85,15 +85,6 @@ async def on_ready():
     for guild in bot.guilds:
         try:
             bot.guild = guild
-            
-            try:
-                with open("restart.txt") as f:
-                    channel = bot.get_channel(int(f.readline()))
-                    f.close()
-                await channel.send("Restarted!")
-                os.remove("restart.txt")
-            except:
-                pass
                 
             bot.creator = discord.utils.get(guild.members, id=177939404243992578)
             
@@ -121,24 +112,25 @@ async def on_ready():
             elif status["status"] == "watch":
                 await bot.change_presence(activity=discord.Activity(name=status["presence"], type=discord.ActivityType.watching))
                 
-            if not Path("/saves/warns.json").exists():
-                print("/saves/warns.json doesn't exist. Creating from sample file")
+            if not Path("saves/warns.json").exists():
+                print("saves/warns.json doesn't exist. Creating from sample file")
                 try:
-                    shutil.copy("/saves/warns.json.sample", "/saves/warns.json")
+                    shutil.copy("saves/warns.json.sample", "saves/warns.json")
+                    bot.load_extension('addons.warn')
                 except:
-                    print("/saves/warns.json.sample doesn't exist. Please download from repo.")
-            if not Path("/saves/fwinfo.json").exists():
-                print("/saves/fwinfo.json doesn't exist. Creating from sample file")
+                    print("saves/warns.json.sample doesn't exist. Please download from repo.")
+            if not Path("saves/fwinfo.json").exists():
+                print("saves/fwinfo.json doesn't exist. Creating from sample file")
                 try:
-                    shutil.copy("/saves/fwinfo.json.sample", "/saves/fwinfo.json")
+                    shutil.copy("saves/fwinfo.json.sample", "saves/fwinfo.json")
                 except:
-                    print("/saves/fwinfo.json.sample doesn't exist. Please download from repo.")
-            if not Path("/saves/bot_status.json").exists():
-                print("/saves/bot_status.json doesn't exist. Creating from sample file")
+                    print("saves/fwinfo.json.sample doesn't exist. Please download from repo.")
+            if not Path("saves/bot_status.json").exists():
+                print("saves/bot_status.json doesn't exist. Creating from sample file")
                 try:
-                    shutil.copy("/saves/bot_status.json.sample", "/saves/bot_status.json")
+                    shutil.copy("saves/bot_status.json.sample", "saves/bot_status.json")
                 except:
-                    print("/saves/bot_status.json.sample doesn't exist. Please download from repo.")
+                    print("saves/bot_status.json.sample doesn't exist. Please download from repo.")
             
             print("Initialized on {}.".format(guild.name))
         except Exception as e:
