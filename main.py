@@ -109,6 +109,16 @@ async def on_ready():
             get_command_list()
                 
                 
+            with open('saves/bot_status.json', 'r') as f:
+                status = json.load(f)
+                
+            if status["status"] == "game":
+                await bot.change_presence(activity=discord.Game(name=status["presence"]))
+            elif status["status"] == "music":
+                await bot.change_presence(activity=discord.Activity(name=status["presence"], type=discord.ActivityType.listening))
+            elif status["status"] == "watch":
+                await bot.change_presence(activity=discord.Activity(name=status["presence"], type=discord.ActivityType.watching))
+            
             print("Initialized on {}.".format(guild.name))
         except Exception as e:
             print("Failed to initialize on {}".format(guild.name))

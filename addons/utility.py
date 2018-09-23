@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 import sys
 import os
+import json
 
 class Utility:
 
@@ -45,17 +46,26 @@ class Utility:
         if ctx.invoked_with == "playing":
             return await ctx.send("You can use 'music', 'game', or 'watch' to choose an activity for the bot.")
         elif ctx.invoked_with == "game":
+            key = "game"
             game = discord.Game(name=presence)
-            await self.bot.change_presence(status=discord.Status.idle, activity=game)
-            return await ctx.send("Changed game status to `{}`!".format(presence))
+            await self.bot.change_presence(activity=game)
+            await ctx.send("Changed game status to `{}`!".format(presence))
         elif ctx.invoked_with == "music":
+            key = "music"
             music = discord.Activity(name=presence, type=discord.ActivityType.listening)
             await self.bot.change_presence(activity=music)
-            return await ctx.send("Changed music status to `{}`!".format(presence))
+            await ctx.send("Changed music status to `{}`!".format(presence))
         elif ctx.invoked_with == "watch":
+            key = "watch"
             show = discord.Activity(name=presence, type=discord.ActivityType.watching)
             await self.bot.change_presence(activity=show)
-            return await ctx.send("Changed video status to `{}`!".format(presence))
+            await ctx.send("Changed video status to `{}`!".format(presence))
+        with open('saves/bot_status.json', 'r') as f:
+            status = json.load(f)
+        status["status"] = key
+        status["presence"] = presence
+        with open('saves/bot_status.json', 'w') as f:
+            json.dump(status, f, indent=4)
             
     @commands.command()
     async def about(self, ctx):
@@ -123,6 +133,39 @@ class Utility:
         embed.add_field(name="Roles", value="{}".format(len(ctx.guild.roles)))
         embed.add_field(name="Created at", value="{}".format(ctx.guild.created_at))
         await ctx.send(embed=embed)
+        
+    @commands.command(aliases=['fwinfo', 'fi'])
+    async def firmwareinfo(self, ctx, fw=""):
+        """Returns firmware info for any released firmware in the database"""
+        with open('saves/fwinfo.json', 'r') as f:
+                firmware = json.load(f)
+        if not fw:
+            version = {}
+            for i in firmware.keys():
+                version[i.replace(".", "")] = i
+            a = [int(i) for i in version.keys()]
+            max_firm = firmware[version[str(max(a))]]
+            embed = discord.Embed(title="Firmware info for version {}".format(version[str(max(a))]))
+            embed.description = max_firm
+            await ctx.send(embed=embed)
+        else:
+            if not fw in firmware.keys():
+                return await ctx.send("Firmware isn't in database!")
+            else:
+                embed = discord.Embed(title="Firmware info for version {}".format(fw))
+                embed.description = firmware[fw]
+                await ctx.send(embed=embed)
             
+    @commands.command(aliases=['listfw', 'lfw'])
+    async def listfirmwares(self, ctx):
+        """Lists all available firmwares"""
+        with open('saves/fwinfo.json', 'r') as f:
+            versionlist = json.load(f)
+        embed = discord.Embed(title="Available firmwares", description="")
+        for version, data in versionlist.items():
+            embed.description += "{}\n".format(version)
+        await ctx.send(embed=embed)
+            
+    
 def setup(bot):
     bot.add_cog(Utility(bot))

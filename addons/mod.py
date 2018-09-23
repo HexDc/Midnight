@@ -6,6 +6,7 @@ import os
 import sys
 import json
 import asyncio
+import json
 
 class Moderation:
     """Bot commands for moderation."""
@@ -149,6 +150,20 @@ class Moderation:
             await ctx.message.delete()
             await ctx.author.send("This command is restricted to the bot creator.")
         await ctx.s()
+        
+    @commands.command(aliases=['setfw'])
+    async def setfirmwareinfo(self, ctx, version="", *, content=""):
+        """Allows updating of firmware info"""
+        if not content or not version:
+            return await ctx.send("Error, missing parameters.")
+        elif not self.bot.staff_role in ctx.author.roles and not ctx.author == self.bot.creator:
+            return await ctx.send("You don't have permission to use this.")
+        with open('saves/fwinfo.json', 'r') as f:
+            firmware = json.load(f)
+        firmware[version] = content
+        with open('saves/fwinfo.json', 'w') as f:
+            json.dump(firmware, f, indent=4)
+        await ctx.send("Updated version `{}`".format(version))
             
 def setup(bot):
     bot.add_cog(Moderation(bot))
