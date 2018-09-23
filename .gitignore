@@ -1,3 +1,4 @@
 config.py
 *__pycache__*
 saves/warns.json
+saves/bot_status.json
