@@ -3,3 +3,4 @@ config.py
 saves/warns.json
 saves/bot_status.json
 saves/fwinfo.json
+restart.txt
