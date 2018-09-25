@@ -15,13 +15,13 @@ class Events:
     async def on_member_join(self, member):
         embed = discord.Embed(title="New member!", colour=discord.Color.green())
         embed.description = "{0.mention} | {0.name}#{0.discriminator} | {0.id}".format(member)
-        embed.set_footer(text="Joined at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
+        embed.set_footer(text="Joined at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
         await self.bot.log_channel.send(embed=embed)
         
     async def on_member_remove(self, member):
         embed = discord.Embed(title="Member left.", colour=discord.Color.blue())
         embed.description = "{0.mention} | {0.name}#{0.discriminator} | {0.id}".format(member)
-        embed.set_footer(text="Left at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
+        embed.set_footer(text="Left at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
         await self.bot.log_channel.send(embed=embed)
                 
     def embed_member_change(ctx, before, after, item):
@@ -33,7 +33,7 @@ class Events:
             before_item = before.nick
             after_item = after.nick
         embed.description = "**Before**: {}\n**After**: {}\n**ID**: {}".format(before_item, after_item, before.id)
-        embed.set_footer(text="Changed at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
+        embed.set_footer(text="Changed at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
         return embed
                 
     async def on_member_update(self, before, after):
@@ -48,11 +48,11 @@ class Events:
             if len(before.roles) < len(after.roles):
                 role = list(set(after.roles)-set(before.roles))
                 embed.title = "Role added to {}".format(before)
-                embed.set_footer(text="Role added at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
+                embed.set_footer(text="Role added at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
             else:
                 role = list(set(before.roles)-set(after.roles))
                 embed.title = "Role removed from {}".format(before)
-                embed.set_footer(text="Role removed at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
+                embed.set_footer(text="Role removed at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
             embed.description = "{}".format(role[0])
             await self.bot.log_channel.send(embed=embed)
         
@@ -77,7 +77,7 @@ class Events:
                 if not message.content: # Message is standalone image. Temporary until deleted image logging functions
                     return
                 embed = discord.Embed(description=message.content)
-                embed.set_footer(text="Deleted at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
+                embed.set_footer(text="Deleted at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
                 await self.bot.log_channel.send("Message by {} deleted in channel {}:".format(message.author, message.channel.mention), embed=embed)
                 
     async def on_message_edit(self, before, after):
@@ -87,12 +87,12 @@ class Events:
             else:
                 pin_state = "Unpinned"
             embed = discord.Embed(description=after.content)
-            embed.set_footer(text="{} at {} Mountain Time".format(pin_state, datetime.now().strftime('%H:%M:%S')))
+            embed.set_footer(text="{} at {} UTC±0".format(pin_state, datetime.now().strftime('%H:%M:%S')))
             await self.bot.log_channel.send("Message by {} {} in {}".format(after.author, pin_state.lower(), after.channel.mention), embed=embed)
         elif before.content != after.content:
             embed = discord.Embed()
             embed.description = "**Before**: {}\n**After**: {}".format(before.content, after.content)
-            embed.set_footer(text="Edited at {} Mountain Time".format(datetime.now().strftime('%H:%M:%S')))
+            embed.set_footer(text="Edited at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
             await self.bot.log_channel.send("Message by {} edited in {}".format(after.author, after.channel.mention), embed=embed)
 
         
