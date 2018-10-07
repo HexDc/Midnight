@@ -6,6 +6,14 @@ import sys
 import os
 import json
 
+serials = {
+    "XAW1": (78, 79, 100),
+    "XAW4": (11, 12, 13),
+    "XAW7": (17, 18, 19),
+    "XAJ4": (52, 53, 60),
+    "XAJ7": (42, 43, 50)
+}
+
 class Utility:
 
     def __init__(self, bot):
@@ -174,7 +182,31 @@ class Utility:
         for value in a:
             embed.description += "{}\n".format(version[str(value)])
         await ctx.send(embed=embed)
-            
+        
+    @commands.command(aliases=['sinfo'])
+    async def serialinfo(self, ctx, str=""):
+        """Allows a user to check if their switch is patched via serial code. Please input it with no hyphens or anything other than the serial code. Giving no input will show a guide on the patched serial codes"""
+        await ctx.message.delete()
+        if not str:
+            embed = discord.Embed()
+            embed.set_image(url="https://i.imgur.com/5yKNNme.png")
+            return await ctx.send(embed=embed)
+        elif len(str) < 8:
+            return await ctx.send("Invalid input!")
+        try:
+            leading = str[:4]
+            if leading == "XAJ1":
+                return await ctx.send("Your Switch with leading characters `{}` and identifier `{}` is definitely unpatched! Congrats!".format(leading, stringIdentifier))
+            stringIdentifier = str[4:8]
+            identifier = int(stringIdentifier)
+            low, mid, high = serials[leading]
+            if identifier < low:
+                return await ctx.send("Your Switch with leading characters `{}` and identifier `{}` is definitely unpatched! Congrats!".format(leading, stringIdentifier))
+            elif mid < identifier < high:
+                return await ctx.send("It is very likely your Switch with leading characters `{}` and identifier {} is patched.".format(leading, stringIdentifier))
+            return await ctx.send("Your Switch with leading characters `{}` and identifier `{}` is definitely patched.".format(leading, stringIdentifier))
+        except KeyError:
+            return await ctx.send("Invalid input!")
     
 def setup(bot):
     bot.add_cog(Utility(bot))
