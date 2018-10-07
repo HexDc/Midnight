@@ -203,7 +203,7 @@ class Utility:
             if identifier < low:
                 return await ctx.send("Your Switch with leading characters `{}` and identifier `{}` is definitely unpatched! Congrats!".format(leading, stringIdentifier))
             elif mid < identifier < high:
-                return await ctx.send("It is very likely your Switch with leading characters `{}` and identifier {} is patched.".format(leading, stringIdentifier))
+                return await ctx.send("It is very likely your Switch with leading characters `{}` and identifier `{}` is patched.".format(leading, stringIdentifier))
             return await ctx.send("Your Switch with leading characters `{}` and identifier `{}` is definitely patched.".format(leading, stringIdentifier))
         except KeyError:
             return await ctx.send("Invalid input!")
