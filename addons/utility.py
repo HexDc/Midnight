@@ -194,19 +194,20 @@ class Utility:
             return await ctx.send("{} Invalid input!".format(ctx.author.mention))
         await ctx.message.delete()
         try:
+            str = str.upper()
             leading = str[:4]
             stringIdentifier = str[4:8]
             if leading == "XAJ1":
-                return await ctx.send("{} Your Switch with leading characters `{}` and identifier `{}` is definitely unpatched! Congrats!".format(ctx.author.mention, leading, stringIdentifier))
+                return await ctx.send("{} Your Switch with leading characters `{}` and identifier `{}` is definitely unpatched! Congrats! <a:blobwave:499090427887222785>".format(ctx.author.mention, leading, stringIdentifier))
             elif not stringIdentifier.isdigit():
                 return await ctx.send("{} Stop trying to break the bot. (Leading char: `{}` Identifier: `{}`)".format(ctx.author.mention, leading, stringIdentifier))
             identifier = int(stringIdentifier)
             low, mid, high = serials[leading]
             if identifier < low:
-                return await ctx.send("{} Your Switch with leading characters `{}` and identifier `{}` is definitely unpatched! Congrats!".format(ctx.author.mention, leading, stringIdentifier))
+                return await ctx.send("{} Your Switch with leading characters `{}` and identifier `{}` is definitely unpatched! Congrats! <a:blobwave:499090427887222785>".format(ctx.author.mention, leading, stringIdentifier))
             elif mid < identifier < high:
-                return await ctx.send("{} It is very likely your Switch with leading characters `{}` and identifier `{}` is patched.".format(ctx.author.mention, leading, stringIdentifier))
-            return await ctx.send("{} Your Switch with leading characters `{}` and identifier `{}` is definitely patched.".format(ctx.author.mention, leading, stringIdentifier))
+                return await ctx.send("{} It is very likely your Switch with leading characters `{}` and identifier `{}` is patched. <a:sadblob:499094080375226380>".format(ctx.author.mention, leading, stringIdentifier))
+            return await ctx.send("{} Your Switch with leading characters `{}` and identifier `{}` is definitely patched. <a:sadblob:499094080375226380>".format(ctx.author.mention, leading, stringIdentifier))
         except KeyError:
             return await ctx.send("{} Invalid input!".format(ctx.author.mention))
     
