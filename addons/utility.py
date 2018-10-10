@@ -19,20 +19,6 @@ class Utility:
     def __init__(self, bot):
         self.bot = bot
         print('Addon "{}" loaded'.format(self.__class__.__name__))
-        
-    def find_user(self, user, ctx):
-        found_member = self.bot.guild.get_member(user)
-        if not found_member:
-            found_member = self.bot.guild.get_member_named(user)
-        if not found_member:
-            try:
-                found_member = ctx.message.mentions[0]
-            except IndexError:
-                pass
-        if not found_member:
-            return None
-        else:
-            return found_member
             
     @commands.command()
     async def restart(self, ctx):
@@ -99,27 +85,23 @@ class Utility:
     async def togglerole(self, ctx, role=""):
         """Used to toggle roles. Available: Direct, Spoiler"""
         role = role.lower()
-        found_member = ctx.message.author
-        author_roles = found_member.roles[1:]
+        member = ctx.message.author
+        author_roles = member.roles[1:]
         if role == "direct":
-            await self.role_change(self.bot.direct_role, found_member)
+            await self.role_change(self.bot.direct_role, member)
             await ctx.send("Toggled the Direct role!")
-            await self.bot.log_channel.send("{}#{} toggled the Direct role.".format(found_member.name, found_member.discriminator))
+            await self.bot.log_channel.send("{}#{} toggled the Direct role.".format(member.name, member.discriminator))
         elif role == "spoiler" or role == "spoilers":
-            await self.role_change(self.bot.spoiler_role, found_member)
+            await self.role_change(self.bot.spoiler_role, member)
             await ctx.send("Toggled the Spoiler role!")
-            await self.bot.log_channel.send("{}#{} toggled the Spoiler role.".format(found_member.name, found_member.discriminator))
+            await self.bot.log_channel.send("{}#{} toggled the Spoiler role.".format(member.name, member.discriminator))
         else:
             return await ctx.send("You forgot to give an input, or gave an unrecognized input. Please try again. Available roles can be seed with `.help togglerole`")
             
     @commands.command(aliases=['ui', 'user'])
-    async def userinfo(self, ctx, member=""):
+    async def userinfo(self, ctx, member:discord.Member):
         """Gets the userinfo for a given server member. If given no member, it will pull your own info."""
-        if member:
-            user = self.find_user(member, ctx)
-            if not user:
-                return await ctx.send("Could not find that user!")
-        elif not member:
+        if not member:
             user = ctx.author
         embed = discord.Embed(title="User info for {}".format(user))
         embed.set_thumbnail(url=user.avatar_url)
