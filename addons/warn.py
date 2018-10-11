@@ -78,28 +78,25 @@ class Warning:
                 json.dump(self.warns, f, indent=4)
                 
     @commands.command(pass_context=True)
-    async def listwarns(self, ctx, *, member:discord.Member):
+    async def listwarns(self, ctx, *, member:discord.Member=None):
         """List a member's warns."""
         if member is None:
             member = ctx.author
-        elif not member:
-            await ctx.send("That user could not be found.")
+        if not self.bot.staff_role in member.roles and not ctx.author == ctx.guild.owner and not ctx.message.author == member:
+            await ctx.send("You don't have permission to use this command.")
         else:
-            if not self.bot.staff_role in member.roles and not ctx.author == ctx.guild.owner and not ctx.message.author == member:
-                await ctx.send("You don't have permission to use this command.")
-            else:
-                try:
-                    user_warns = self.warns[str(member.id)]
-                    if user_warns:
-                        embed = discord.Embed(title="Warns for user {}#{}".format(member.name, member.discriminator), description="")
-                        for warn in user_warns:
-                            embed.description += "• {}\n".format(warn)
-                        embed.set_footer(text="There are {} warns in total.".format(len(user_warns)))
-                        await ctx.send(embed=embed)
-                    else:
-                        await ctx.send("That user has no warns!")
-                except KeyError:
+            try:
+                user_warns = self.warns[str(member.id)]
+                if user_warns:
+                    embed = discord.Embed(title="Warns for user {}#{}".format(member.name, member.discriminator), description="")
+                    for warn in user_warns:
+                        embed.description += "• {}\n".format(warn)
+                    embed.set_footer(text="There are {} warns in total.".format(len(user_warns)))
+                    await ctx.send(embed=embed)
+                else:
                     await ctx.send("That user has no warns!")
+            except KeyError:
+                await ctx.send("That user has no warns!")
                 
     @commands.has_permissions(ban_members=True)    
     @commands.command(pass_context=True)

@@ -31,10 +31,19 @@ class Moderation:
             embed.set_footer(text="Member ID = {}".format(member.id))
             await self.bot.log_channel.send(embed=embed)
             try:
-                await member.send("You were kicked from SwitchHaxing for:\n\n`{}`".format(reason))
+                await member.send("You were kicked from SwitchHaxing for:\n\n`{}`\n\nThis has added a single warn to you as well.".format(reason))
             except discord.Forbidden:
                 pass # bot blocked or not accepting DMs
             await member.kick(reason=reason)
+            with open('saves/warns.json', 'r+') as f:
+                warns = json.load(f)
+            try:
+                warns[str(member.id)]
+            except KeyError:
+                warns[str(member.id)] = []
+            warns[str(member.id)].append(reason)
+            with open("saves/warns.json", "w+") as f:
+                json.dump(warns, f, indent=4)
             await ctx.send("Successfully kicked user {}#{}!".format(member.name, member.discriminator))
      
     @commands.command(pass_context=True)
