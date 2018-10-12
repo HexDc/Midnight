@@ -168,7 +168,7 @@ class Utility:
     @commands.command(aliases=['sinfo'])
     async def serialinfo(self, ctx, str=""):
         """Allows a user to check if their switch is patched via serial code. Please input it with no hyphens or anything other than the serial code. Giving no input will show a guide on the patched serial codes"""
-        if not str:
+        if len(ctx.message.mentions) > 0 or not str:
             embed = discord.Embed()
             embed.set_image(url="https://i.imgur.com/5yKNNme.png")
             return await ctx.send(embed=embed)
