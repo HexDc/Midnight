@@ -17,7 +17,7 @@ class Events:
         embed.description = "{0.mention} | {0.name}#{0.discriminator} | {0.id}".format(member)
         account_creation_date = (datetime.fromtimestamp((int((bin(member.id)[:-22])[2:], 2)+1420070400000) / 1000.0))
         if (datetime.now() - account_creation_date).days < 7:
-            embed.add_field(name="New account", value="{}".format((datetime.now() - account_creation_date)))
+            embed.add_field(name="New account!", value="Created At: {}\nAge: {} Days".format(member.created_at.strftime('%m-%d-%Y %H:%M:%S'), (datetime.now()-account_creation_date).days))
         embed.set_footer(text="Joined at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
         await self.bot.log_channel.send(embed=embed)
         
