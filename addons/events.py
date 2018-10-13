@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 #import git
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # git = git.cmd.Git(".")
 
@@ -15,6 +15,9 @@ class Events:
     async def on_member_join(self, member):
         embed = discord.Embed(title="New member!", colour=discord.Color.green())
         embed.description = "{0.mention} | {0.name}#{0.discriminator} | {0.id}".format(member)
+        account_creation_date = (datetime.fromtimestamp((int((bin(member.id)[:-22])[2:], 2)+1420070400000) / 1000.0))
+        if (datetime.now() - account_creation_date).days < 7:
+            embed.add_field(name="New account", value="{}".format((datetime.now() - account_creation_date)))
         embed.set_footer(text="Joined at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
         await self.bot.log_channel.send(embed=embed)
         

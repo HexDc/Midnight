@@ -5,6 +5,7 @@ from discord.ext import commands
 import sys
 import os
 import json
+from datetime import datetime
 
 serials = {
     "XAW1": (78, 79, 100),
@@ -99,9 +100,9 @@ class Utility:
             return await ctx.send("You forgot to give an input, or gave an unrecognized input. Please try again. Available roles can be seed with `.help togglerole`")
             
     @commands.command(aliases=['ui', 'user'])
-    async def userinfo(self, ctx, member:discord.Member):
-        """Gets the userinfo for a given server member. If given no member, it will pull your own info."""
-        if not member:
+    async def userinfo(self, ctx, user:discord.Member=None, depth=False):
+        """Gets the userinfo for a given server member. If given no member, it will pull your own info. If you specify "True" after providing a member, you will see creation date, join date, and account age."""
+        if not user:
             user = ctx.author
         embed = discord.Embed(title="User info for {}".format(user))
         embed.set_thumbnail(url=user.avatar_url)
@@ -111,9 +112,14 @@ class Utility:
             embed.add_field(name="Nickname", value="{}".format(user.nick))
         if user.bot:
             embed.add_field(name="Bot", value="{}".format(user.bot))
+        if len(user.roles) > 1:
+            embed.add_field(name="Highest Role", value="{}".format(user.top_role))
         embed.add_field(name="ID", value="{}".format(user.id))
-        embed.add_field(name="Highest Role", value="{}".format(user.top_role))
-        embed.add_field(name="Joined At", value="{}".format(user.joined_at))
+        created_at_epoch = int((bin(user.id)[:-22])[2:], 2)
+        if depth:
+            embed.add_field(name="Created At", value="{} UTC".format(datetime.fromtimestamp((created_at_epoch+1420070400000) / 1000.0).strftime('%m-%d-%Y %H:%M:%S')))
+            embed.add_field(name="Joined At", value="{} UTC".format(user.joined_at.strftime('%m-%d-%Y %H:%M:%S')))
+            embed.add_field(name="Account Age", value="{} Days".format((datetime.now() - (datetime.fromtimestamp((created_at_epoch+1420070400000) / 1000.0))).days))
         await ctx.send(embed=embed)
         
     @commands.command(aliases=['si', 'server'])
