@@ -20,6 +20,8 @@ class Events:
             embed.add_field(name="New account!", value="Created At: {}\nAge: {} Days".format(member.created_at.strftime('%m-%d-%Y %H:%M:%S'), (datetime.now()-account_creation_date).days))
         embed.set_footer(text="Joined at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
         await self.bot.log_channel.send(embed=embed)
+        if (self.bot.guild.member_count-1) % 100 == 0: #Only one bot on server currently
+            await self.bot.log_channel.send("We've reached a milestone! There are {} on this server!".format(self.bot.guild.member_count-1))
         
     async def on_member_remove(self, member):
         embed = discord.Embed(title="Member left.", colour=discord.Color.blue())
