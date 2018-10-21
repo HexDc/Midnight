@@ -69,6 +69,21 @@ class Events:
                 embed.set_footer(text="Role removed at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
             embed.description = "{}".format(role[0])
             await self.bot.log_channel.send(embed=embed)
+            
+    async def check_for_piracy(self, ctx, message):
+        str = message.content.lower().replace(',', '').replace('`', '').replace('.', '').lower()
+        for banned_word in piracy_tools:
+            if banned_word in str:
+                await message.delete()
+                sent_message = " you mentioned a piracy tool. Please read the rules in <#349714057449832448>, and watch what you send!"
+                try:
+                    await message.author.send("Your message in {} was deleted as".format(message.channel.mention) + sent_message + "\n\nBanned word: `{}`\n\n Your message: `{}`".format(banned_word, message.content))
+                except discord.Forbidden:
+                    await message.channel.send("{}".format(message.author.mention) + sent_message)
+                embed = discord.Embed(title="Piracy tool mentioned!")
+                embed.description = "{} mentioned the piracy tool `{}` in {}.".format(message.author.mention, banned_word, message.channel.mention)
+                embed.set_footer(text="Tool mentioned at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
+                await self.bot.log_channel.send(embed=embed)
         
     async def on_message(self, message):
         # auto ban on 15+ pings
@@ -81,19 +96,7 @@ class Events:
             
         # filter piracy_tools
         if not message.author == self.bot.creator and not message.author.bot and not self.bot.staff_role in message.author.roles:
-            str = message.content.lower().replace(',', '').replace('`', '').replace('.', '').lower()
-            for banned_word in piracy_tools:
-                if banned_word in str:
-                    await message.delete()
-                    sent_message = " you mentioned a piracy tool. Please read the rules in <#349714057449832448>, and watch what you send!"
-                    try:
-                        await message.author.send("Your message in {} was deleted as".format(message.channel.mention) + sent_message + "\n\nBanned word: `{}`\n\n Your message: `{}`".format(banned_word, message.content))
-                    except discord.Forbidden:
-                        await message.channel.send("{}".format(message.author.mention) + sent_message)
-                    embed = discord.Embed(title="Piracy tool mentioned!")
-                    embed.description = "{} mentioned the piracy tool `{}` in {}.".format(message.author.mention, banned_word, message.channel.mention)
-                    embed.set_footer(text="Tool mentioned at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
-                    await self.bot.log_channel.send(embed=embed)
+            await self.check_for_piracy(self, message)
             
         
         # if isinstance(message.channel, discord.abc.GuildChannel) and 'git' in message.channel.name and message.author.name == 'GitHub':
@@ -101,15 +104,6 @@ class Events:
             # git.pull()
             # print('Changes pulled!')
             # await self.bot.log_channel.send("Pulled latest changes!")
-            
-    async def on_message_delete(self, message):
-        if isinstance(message.channel, discord.abc.GuildChannel) and message.author.id != self.bot.user.id and not message.author.bot and not message.content.startswith(tuple(self.bot.command_list), 1):
-            if message.channel not in self.bot.ignored_channels and not self.bot.message_purge:
-                if not message.content: # Message is standalone image. Temporary until deleted image logging functions
-                    return
-                embed = discord.Embed(description=message.content)
-                embed.set_footer(text="Deleted at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
-                await self.bot.log_channel.send("Message by {} deleted in channel {}:".format(message.author, message.channel.mention), embed=embed)
                 
     async def on_message_edit(self, before, after):
         if before.pinned != after.pinned:
@@ -125,7 +119,17 @@ class Events:
             embed.description = "**Before**: {}\n**After**: {}".format(before.content, after.content)
             embed.set_footer(text="Edited at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
             await self.bot.log_channel.send("Message by {} edited in {}".format(after.author, after.channel.mention), embed=embed)
+        if not after.author.bot and not self.bot.staff_role in after.author.roles:
+            await self.check_for_piracy(self, after)
 
+    async def on_message_delete(self, message):
+        if isinstance(message.channel, discord.abc.GuildChannel) and message.author.id != self.bot.user.id and not message.author.bot and not message.content.startswith(tuple(self.bot.command_list), 1):
+            if message.channel not in self.bot.ignored_channels and not self.bot.message_purge:
+                if not message.content: # Message is standalone image. Temporary until deleted image logging functions
+                    return
+                embed = discord.Embed(description=message.content)
+                embed.set_footer(text="Deleted at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
+                await self.bot.log_channel.send("Message by {} deleted in channel {}:".format(message.author, message.channel.mention), embed=embed)
         
 def setup(bot):
     bot.add_cog(Events(bot))
