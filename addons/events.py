@@ -6,6 +6,15 @@ from datetime import datetime, timedelta
 
 # git = git.cmd.Git(".")
 
+piracy_tools = [
+    "team xecuter",
+    "sxos",
+    "sx os",
+    "cdnsp",
+    "cd nsp",
+    "txos",
+]
+
 class Events:
 
     def __init__(self, bot):
@@ -69,6 +78,22 @@ class Events:
             await message.author.ban()
             await message.channel.send("{} was banned for attempting to spam user mentions.".format(message.author))
             await self.bot.log_channel.send("{} was banned for attempting to spam user mentions.".format(message.author))
+            
+        if not message.author == self.bot.creator and not message.author == self.bot.user and not self.bot.staff_role in message.author.roles:
+            str = message.content.lower().replace(',', '').replace('`', '').replace('.', '')
+            for banned_word in piracy_tools:
+                if banned_word in str:
+                    await message.delete()
+                    sent_message = " you mentioned a piracy tool. Please read the rules in <#349714057449832448>, and watch what you send!"
+                    try:
+                        await message.author.send("Your message in {} was deleted as".format(message.channel.mention) + sent_message + "\n\nBanned word: `{}`\n\n Your message: `{}`".format(banned_word, message.content))
+                    except discord.Forbidden:
+                        await message.channel.send("{}".format(message.author.mention) + sent_message)
+                    embed = discord.Embed(title="Piracy tool mentioned!")
+                    embed.description = "{} mentioned the piracy tool `{}` in {}.".format(message.author.mention, banned_word, message.channel.mention)
+                    embed.set_footer(text="Tool mentioned at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
+                    await self.bot.log_channel.send(embed=embed)
+            
         
         # if isinstance(message.channel, discord.abc.GuildChannel) and 'git' in message.channel.name and message.author.name == 'GitHub':
             # print('Pulling changes')
