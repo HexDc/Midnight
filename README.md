@@ -1,6 +1,8 @@
 # Midnight
 A bot for the SwitchHaxing discord
 
+If you would like to add to the filter, PR the addition to the list in [events.py](https://github.com/GriffinG1/Midnight/blob/master/addons/events.py#L9)
+
 ## Requirements
 * Python 3.5 or above
 * [discord.py](https://github.com/Rapptz/discord.py). Be sure to use the latest rewrite commit to ensure code functionality.

@@ -30,7 +30,7 @@ class Events:
         embed.set_footer(text="Joined at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
         await self.bot.log_channel.send(embed=embed)
         if (self.bot.guild.member_count-1) % 100 == 0: #Only one bot on server currently
-            await self.bot.log_channel.send("We've reached a milestone! There are {} on this server!".format(self.bot.guild.member_count-1))
+            await self.bot.log_channel.send("We've reached a milestone! There are {} members on this server!".format(self.bot.guild.member_count-1))
         
     async def on_member_remove(self, member):
         embed = discord.Embed(title="Member left.", colour=discord.Color.blue())
@@ -79,8 +79,9 @@ class Events:
             await message.channel.send("{} was banned for attempting to spam user mentions.".format(message.author))
             await self.bot.log_channel.send("{} was banned for attempting to spam user mentions.".format(message.author))
             
+        # filter piracy_tools
         if not message.author == self.bot.creator and not message.author.bot and not self.bot.staff_role in message.author.roles:
-            str = message.content.lower().replace(',', '').replace('`', '').replace('.', '')
+            str = message.content.lower().replace(',', '').replace('`', '').replace('.', '').lower()
             for banned_word in piracy_tools:
                 if banned_word in str:
                     await message.delete()
