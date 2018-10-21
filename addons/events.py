@@ -79,7 +79,7 @@ class Events:
             await message.channel.send("{} was banned for attempting to spam user mentions.".format(message.author))
             await self.bot.log_channel.send("{} was banned for attempting to spam user mentions.".format(message.author))
             
-        if not message.author == self.bot.creator and not message.author == self.bot.user and not self.bot.staff_role in message.author.roles:
+        if not message.author == self.bot.creator and not message.author.bot and not self.bot.staff_role in message.author.roles:
             str = message.content.lower().replace(',', '').replace('`', '').replace('.', '')
             for banned_word in piracy_tools:
                 if banned_word in str:
