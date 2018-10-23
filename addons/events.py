@@ -16,6 +16,12 @@ piracy_tools = [
     "cd nsp",
     "txos",
     "cdnx",
+    "freeshop",
+    "tx",
+    "switchiso",
+    "darkumbra",
+    "switchroms",
+    "bigbluebox",
 ]
 
 class Events:
