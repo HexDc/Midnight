@@ -10,9 +10,12 @@ piracy_tools = [
     "team xecuter",
     "sxos",
     "sx os",
+    "sx pro",
+    "sxpro",
     "cdnsp",
     "cd nsp",
     "txos",
+    "cdnx",
 ]
 
 class Events:
@@ -119,7 +122,7 @@ class Events:
             embed.description = "**Before**: {}\n**After**: {}".format(before.content, after.content)
             embed.set_footer(text="Edited at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
             await self.bot.log_channel.send("Message by {} edited in {}".format(after.author, after.channel.mention), embed=embed)
-        if not after.author.bot and not self.bot.staff_role in after.author.roles:
+        if not after.author == self.bot.creator and not after.author.bot and not self.bot.staff_role in after.author.roles:
             await self.check_for_piracy(self, after)
 
     async def on_message_delete(self, message):
