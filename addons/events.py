@@ -22,6 +22,9 @@ piracy_tools = [
     "darkumbra",
     "switchroms",
     "bigbluebox",
+    "sx ox",
+    "sx",
+    "s☓os",
 ]
 
 class Events:
@@ -105,7 +108,10 @@ class Events:
             
         # filter piracy_tools
         if not message.author == self.bot.creator and not message.author.bot and not self.bot.staff_role in message.author.roles:
-            await self.check_for_piracy(self, message)
+            try:
+                await self.check_for_piracy(self, message)
+            except discord.NotFound:
+                print("Had an issue deleting the message. But it did delete. No clue why.")
             
         
         # if isinstance(message.channel, discord.abc.GuildChannel) and 'git' in message.channel.name and message.author.name == 'GitHub':
@@ -128,8 +134,12 @@ class Events:
             embed.description = "**Before**: {}\n**After**: {}".format(before.content, after.content)
             embed.set_footer(text="Edited at {} UTC±0".format(datetime.now().strftime('%H:%M:%S')))
             await self.bot.log_channel.send("Message by {} edited in {}".format(after.author, after.channel.mention), embed=embed)
+        # filter piracy tools
         if not after.author == self.bot.creator and not after.author.bot and not self.bot.staff_role in after.author.roles:
-            await self.check_for_piracy(self, after)
+            try:
+                await self.check_for_piracy(self, after)
+            except discord.NotFound:
+                print("Had an issue deleting the edited message. But it did delete. No clue why.")
 
     async def on_message_delete(self, message):
         if isinstance(message.channel, discord.abc.GuildChannel) and message.author.id != self.bot.user.id and not message.author.bot and not message.content.startswith(tuple(self.bot.command_list), 1):
