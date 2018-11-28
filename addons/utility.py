@@ -216,6 +216,19 @@ class Utility:
             return await ctx.send("{} Your Switch with leading characters `{}` and identifier `{}` is definitely patched. <a:sadblob:499094080375226380>".format(ctx.author.mention, leading, stringIdentifier))
         except KeyError:
             return await ctx.send("{} Invalid input!".format(ctx.author.mention))
+            
+    @commands.command()
+    async def guide(self, ctx, guide=""):
+        embed = discord.Embed(title="How to hack your switch")
+        if guide == "noir" or guide == "noirscape" or guide == "evi":
+            embed.description = "Noirscape's guide can be found [here](https://switchguide.xyz)"
+        elif guide == "sdsetup":
+            embed.description = "SDSetup's guide can be found [here](https://guide.sdsetup.com)"
+        elif guide == "plai" or guide == "plailect":
+            embed.description = "Plailect's guide can be found [here](https://switch.hacks.guide) **Note: Not yet updated**"
+        else:
+            embed.description = "Noirscape's guide can be found [here](https://switchguide.xyz)\nSDSetup's guide can be found [here](https://guide.sdsetup.com)"
+            
     
 def setup(bot):
     bot.add_cog(Utility(bot))
