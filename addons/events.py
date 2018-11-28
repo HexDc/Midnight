@@ -41,6 +41,7 @@ class Events:
         if mutes[str(member.id)][0] == "M":
             member.add_roles(self.bot.mute_role)
             await member.send_message("You were remuted, as you left while muted.")
+            rejoin = True
         embed = discord.Embed(title="New member!", colour=discord.Color.green())
         embed.description = "{0.mention} | {0.name}#{0.discriminator} | {0.id}".format(member)
         if rejoin == True:
