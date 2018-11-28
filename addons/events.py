@@ -7,24 +7,7 @@ from datetime import datetime, timedelta
 # git = git.cmd.Git(".")
 
 piracy_tools = [
-    "team xecuter",
-    "sxos",
-    "sx os",
-    "sx pro",
-    "sxpro",
-    "cdnsp",
-    "cd nsp",
-    "txos",
-    "cdnx",
-    "freeshop",
-    "tx",
-    "switchiso",
-    "darkumbra",
-    "switchroms",
-    "bigbluebox",
-    "sx ox",
-    "sx",
-    "s☓os",
+    #filtered items go here
 ]
 
 class Events:
