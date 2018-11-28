@@ -122,6 +122,10 @@ class Moderation:
         elif self.bot.mute_role in member.roles:
             return await ctx.send("That user is already muted!")
         else:
+            with open('saves/mutes.json', 'r') as f:
+                mutes = json.load(f)
+            mutes[str(member.id)] = []
+            mutes[str(member.id)].append("M")
             await member.add_roles(self.bot.mute_role)
             await ctx.send("Successfully muted user {}#{}!".format(member.name, member.discriminator))
             embed = discord.Embed(title="{} muted".format(member))
@@ -132,6 +136,8 @@ class Moderation:
                 await member.send("You have been muted on SwitchHaxing.\n{}\nIf you feel this mute was unwarranted, dm a staff member.".format(reason))
             except discord.errors.Forbidden:
                 pass # Bot blocked
+            with open("saves/mutes.json", "w+") as f:
+                    json.dump(mutes, f, indent=4)
             
     @commands.has_permissions(ban_members=True)    
     @commands.command()
@@ -144,6 +150,9 @@ class Moderation:
         elif not self.bot.mute_role in member.roles:
             return await ctx.send("That user isn't muted!")
         else:
+            with open('saves/mutes.json', 'r') as f:
+                mutes = json.load(f)
+            mutes[str(member.id)] = []
             await member.remove_roles(self.bot.mute_role)
             embed = discord.Embed(title = "{} unmuted".format(member))
             embed.description = "{}#{} unmuted user {}#{}".format(ctx.message.author.name, ctx.message.author.discriminator, member.name, member.discriminator)

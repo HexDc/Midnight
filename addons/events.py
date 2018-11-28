@@ -35,8 +35,16 @@ class Events:
         print('Addon "{}" loaded'.format(self.__class__.__name__))
                 
     async def on_member_join(self, member):
+        rejoin = False
+        with open('saves/mutes.json', 'r') as f:
+                mutes = json.load(f)
+        if mutes[str(member.id)][0] == "M":
+            member.add_roles(self.bot.mute_role)
+            await member.send_message("You were remuted, as you left while muted.")
         embed = discord.Embed(title="New member!", colour=discord.Color.green())
         embed.description = "{0.mention} | {0.name}#{0.discriminator} | {0.id}".format(member)
+        if rejoin == True:
+            embed.description += "\nUser has rejoined to attempt to remove a mute."
         account_creation_date = (datetime.fromtimestamp((int((bin(member.id)[:-22])[2:], 2)+1420070400000) / 1000.0))
         if (datetime.now() - account_creation_date).days < 7:
             embed.add_field(name="New account!", value="Created At: {}\nAge: {} Days".format(member.created_at.strftime('%m-%d-%Y %H:%M:%S'), (datetime.now()-account_creation_date).days))
